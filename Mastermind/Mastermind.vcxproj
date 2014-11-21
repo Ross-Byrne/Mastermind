@@ -60,7 +60,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="EasyMode.c" />
     <ClCompile Include="MainClass.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EasyMode.h" />
+    <ClInclude Include="MainClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
