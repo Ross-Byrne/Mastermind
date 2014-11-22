@@ -3,13 +3,22 @@
 
 int main(void)
 {
-	
-	char gameBoard[GBROWS][GBCOLUMNS]; 
-	char feedbackBoard[16][5]; 
+	// Variables
+	char gameBoard[GB_ROWS][GB_COLUMNS]; 
+	char feedbackBoard[FB_ROWS][FB_COLUMNS]; 
 	char gameSolution[5]; 
 	char playersGuess[5]; 
 
-	int endGame = 0, menuChoice = 0;
+	int endGame = 0, menuChoice = 0, i, j;
+
+	// instancating Variables
+	// game board and feedback board
+	for (i = 0; i < GB_ROWS; i++) {
+			for (j = 0; j < GB_COLUMNS; j++) {
+            gameBoard[i][j] = '.';
+			feedbackBoard[i][j] = '.';
+			} // for
+		} // for
 
 	printf("Welcome To Mastermind.");
 
@@ -35,7 +44,7 @@ int main(void)
 			playGame(gameBoard);
 			break;
 		case 2:
-			printf("Exiting");
+			printf("\nExiting!");
 			endGame = 99;
 			break;
 		} // switch
@@ -60,7 +69,21 @@ void printGameMenu()
 	printf("\n2.) Exit.");
 } // printGameMenu()
 
-void playGame(char gameBoard[GBROWS][GBCOLUMNS])
+void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS])
+{
+	int i, j;
+	// prints the game board
+	for (i = 0; i < GB_ROWS; i++) 
+	{
+		for (j = 0; j < GB_COLUMNS; j++) 
+		{
+			printf("%c ", gameBoard[i][j]);
+		} // for
+			printf("\n");
+	} // for
+} // printGameBoard()
+
+void playGame(char gameBoard[GB_ROWS][GB_COLUMNS])
 {
 	int menuChoice = 0;
 
@@ -70,6 +93,8 @@ void playGame(char gameBoard[GBROWS][GBCOLUMNS])
 
 	while(menuChoice != 99)
 	{
+		// prints contents of the game board
+		 printGameBoard(gameBoard);
 
 		// To make sure the number input is in the right range
 		do
@@ -97,9 +122,6 @@ void playGame(char gameBoard[GBROWS][GBCOLUMNS])
 			break;
 		} // switch
 
-
-
-	
 	} // while
 
 } // playGame()

@@ -3,10 +3,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define GBROWS 15
-#define GBCOLUMNS 5
+#define GB_ROWS 15
+#define GB_COLUMNS 4
+
+#define FB_ROWS 15
+#define FB_COLUMNS 4
 
 // Fuctions
 void printMainGameMenu();
 void printGameMenu();
-void playGame(char gameBoard[GBROWS][GBCOLUMNS]);
+
+void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS]);
+
+void playGame(char gameBoard[GB_ROWS][GB_COLUMNS]);
