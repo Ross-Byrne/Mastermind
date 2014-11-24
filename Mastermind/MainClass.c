@@ -54,7 +54,7 @@ int main(void)
 		switch(menuChoice)
 		{
 		case 1:
-			playGame(gameBoard, gameSolution, playersGuess);
+			playGame(gameBoard, feedbackBoard, gameSolution, playersGuess);
 			break;
 		case 2:
 			printf("\nExiting!");
@@ -82,21 +82,21 @@ void printGameMenu()
 	printf("\n2.) Exit.");
 } // printGameMenu()
 
-void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS])
+void printFeedbackPegs(char feedbackBoard[GB_ROWS][GB_COLUMNS])
 {
 	int i, j;
 
-	printf("\nThe Game Board\n\n");
-	// prints the game board
+	printf("\nThe Feedback Board\n\n");
+	// prints the game feedback board
 	for (i = 0; i < GB_ROWS; i++) 
 	{
 		for (j = 0; j < GB_COLUMNS; j++) 
 		{
-			printf("%c ", gameBoard[i][j]);
+			printf("%c ", feedbackBoard[i][j]);
 		} // for
-			printf("\n");
+		printf("\n");
 	} // for
-} // printGameBoard()
+} // printFeedbackBoard()
 
 void printPlayersGuess(char playersGuess[SINGLE_ROW])
 {
@@ -126,34 +126,60 @@ void printGameSolution(char gameSolution[SINGLE_ROW])
 
 } // printGameSolution()
 
-void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char gameSolution[SINGLE_ROW], char playersGuess[SINGLE_ROW])
+void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS])
+{
+	// lots of specific spacing to get the game board
+	// to print onto the screen properly
+	// so it looks like an actual game board
+
+	int i, j;
+	
+	printf("\n===========================");
+	printf("\n= Game Board |  Feedback  =\n");
+	
+	for (i = 0; i < GB_ROWS; i++) 
+	{
+		printf("=  ");
+		// game board
+		for (j = 0; j < GB_COLUMNS; j++) 
+		{
+			printf("%c ", gameBoard[i][j]);
+		} // for
+
+		printf("  |   ");
+
+		// feedback board
+		for (j = 0; j < GB_COLUMNS; j++) 
+		{
+			printf("%c ", feedbackBoard[i][j]);
+		} // for
+
+		printf(" =\n");
+	} // for
+
+	printf("===========================");
+
+} // printFullGameBoard()
+
+void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS], char gameSolution[SINGLE_ROW], char playersGuess[SINGLE_ROW])
 {
 	int menuChoice = 0;
 
 	// testing :O (setting game solution manually)
-	gameSolution[0] = 'o';
-	gameSolution[1] = 'r';
-	gameSolution[2] = 'v';
-	gameSolution[3] = 'y';
+	gameSolution[0] = 'O';
+	gameSolution[1] = 'R';
+	gameSolution[2] = 'V';
+	gameSolution[3] = 'Y';
+
+	printGameBoard(gameBoard, feedbackBoard);
 
 	while(menuChoice != 99)
 	{
-		int guessNum = 0;
-
-		// prints contents of the game board
-		printGameBoard(gameBoard);
-
-		// prints players current guess
-		printPlayersGuess(playersGuess);
-
-		//prints solution to the game
-		printGameSolution(gameSolution);
+		printGameMenu();
 
 		// To make sure the number input is in the right range
 		do
 		{
-			printGameMenu();
-
 			printf("\n\nEnter Option: ");
 		
 			fflush(stdin); // flush buffer
@@ -164,71 +190,10 @@ void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char gameSolution[SINGLE_ROW]
 		switch(menuChoice)
 		{
 		case 1: // make a guess
-
-			printf("\nGuess The Peg!\n");
-			printf("\n1.) Red.");
-			printf("\n2.) Orange.");
-			printf("\n3.) Yellow.");
-			printf("\n4.) Green.");
-			printf("\n5.) Blue.");
-			printf("\n6.) Indigo.");
-			printf("\n7.) Violet.\n");
-
-			while(guessNum < 4)
-			{
-				// To make sure the number input is in the right range
-				do
-				{
-					printf("\n\nEnter Option: ");
-		
-					fflush(stdin); // flush buffer
-					scanf_s("%d",&menuChoice);
-
-				}while((menuChoice < 1) || (menuChoice > 7));
-
-				guessNum++;
-
-				switch(menuChoice)
-				{
-				case 1:
-					printf("\nYou Guess Peg Number %d Is Red", guessNum);
-					playersGuess[guessNum-1] = 'r'; // -1 because 0 index
-					break;
-				case 2:
-					printf("\nYou Guess Peg Number %d Is Orange", guessNum);
-					playersGuess[guessNum-1] = 'o'; // -1 because 0 index
-					break;
-				case 3:
-					printf("\nYou Guess Peg Number %d Is Yellow", guessNum);
-					playersGuess[guessNum-1] = 'y'; // -1 because 0 index
-					break;
-				case 4:
-					printf("\nYou Guess Peg Number %d Is Green", guessNum);
-					playersGuess[guessNum-1] = 'g'; // -1 because 0 index
-					break;
-				case 5:
-					printf("\nYou Guess Peg Number %d Is Blue", guessNum);
-					playersGuess[guessNum-1] = 'b'; // -1 because 0 index
-					break;
-				case 6:
-					printf("\nYou Guess Peg Number %d Is Indigo", guessNum);
-					playersGuess[guessNum-1] = 'i'; // -1 because 0 index
-					break;
-				case 7:
-					printf("\nYou Guess Peg Number %d Is Violet", guessNum);
-					playersGuess[guessNum-1] = 'v'; // -1 because 0 index
-					break;		
-				} // switch
-
-				
-				
-			} // while
-
-
-			//endGame = 0;
+			makeGuess(playersGuess);
 			break;
-		case 2:
-			printf("Exiting");
+		case 2: // exit
+			printf("\nExiting!");
 			menuChoice = 99;
 			break;
 		} // switch
@@ -236,3 +201,64 @@ void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char gameSolution[SINGLE_ROW]
 	} // while
 
 } // playGame()
+
+void makeGuess(char playersGuess[SINGLE_ROW])
+{
+	int guessNum = 0, menuChoice = 0;
+
+	printf("\nGuess The Peg!\n");
+	printf("\n1.) Red.");
+	printf("\n2.) Orange.");
+	printf("\n3.) Yellow.");
+	printf("\n4.) Green.");
+	printf("\n5.) Blue.");
+	printf("\n6.) Indigo.");
+	printf("\n7.) Violet.\n");
+
+	while(guessNum < 4)
+	{
+		// To make sure the number input is in the right range
+		do
+		{
+			printf("\n\nEnter Option: ");
+		
+			fflush(stdin); // flush buffer
+			scanf_s("%d",&menuChoice);
+
+		}while((menuChoice < 1) || (menuChoice > 7));
+
+		guessNum++;
+
+		switch(menuChoice)
+		{
+		case 1:
+			printf("\nYou Guess Peg Number %d Is Red", guessNum);
+			playersGuess[guessNum-1] = 'R'; // -1 because 0 index
+			break;
+		case 2:
+			printf("\nYou Guess Peg Number %d Is Orange", guessNum);
+			playersGuess[guessNum-1] = 'O'; // -1 because 0 index
+			break;
+		case 3:
+			printf("\nYou Guess Peg Number %d Is Yellow", guessNum);
+			playersGuess[guessNum-1] = 'Y'; // -1 because 0 index
+			break;
+		case 4:
+			printf("\nYou Guess Peg Number %d Is Green", guessNum);
+			playersGuess[guessNum-1] = 'G'; // -1 because 0 index
+			break;
+		case 5:
+			printf("\nYou Guess Peg Number %d Is Blue", guessNum);
+			playersGuess[guessNum-1] = 'B'; // -1 because 0 index
+			break;
+		case 6:
+			printf("\nYou Guess Peg Number %d Is Indigo", guessNum);
+			playersGuess[guessNum-1] = 'I'; // -1 because 0 index
+			break;
+		case 7:
+			printf("\nYou Guess Peg Number %d Is Violet", guessNum);
+			playersGuess[guessNum-1] = 'V'; // -1 because 0 index
+			break;		
+		} // switch
+	} // while
+} // makeGuess()

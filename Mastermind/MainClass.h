@@ -14,8 +14,12 @@
 void printMainGameMenu();
 void printGameMenu();
 
-void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS]);
+void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS]);
+void printFeedbackPegs(char feedbackBoard[GB_ROWS][GB_COLUMNS]);
 void printPlayersGuess(char playersGuess[SINGLE_ROW]);
 void printGameSolution(char gameSolution[SINGLE_ROW]);
 
-void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char gameSolution[SINGLE_ROW], char playersGuess[SINGLE_ROW]);
+void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS], 
+	char gameSolution[SINGLE_ROW], char playersGuess[SINGLE_ROW]);
+
+void makeGuess(char playersGuess[SINGLE_ROW]);
