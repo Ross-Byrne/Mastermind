@@ -262,3 +262,36 @@ void makeGuess(char playersGuess[SINGLE_ROW])
 		} // switch
 	} // while
 } // makeGuess()
+
+void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW])
+{
+	int whitePegs = 0, blackPegs = 0;
+	int i, j;
+
+	// whitePegs = correct colour in wrong place
+	// blackPegs = correct colour in right place
+
+	// checks to see if the players guess is right or wrong
+	for(i = 0; i < 4; i++)
+	{
+		for(j = 0; j < 4; j++)
+		{
+			// if the contents of gameSolution and playersGuess match (eg the right colour)
+			// AND the colours are in the same place
+			// SO: if right colour is in right place
+			if((gameSolution[i] == playersGuess[j]) && (i == j)) 
+			{
+				blackPegs++; // player gets black feedback peg
+			} // if
+
+			// if the contents of gameSolution and playersGuess match (eg the right colour)
+			// BUT the colours are in different places
+			// SO: if right colour in wrong place
+			if(gameSolution[i] == playersGuess[j] && i != j) 
+			{
+				whitePegs++; // player gets white feedback peg
+			} // if
+		} // for
+	} // for
+
+} // checkPlayersGuess()
