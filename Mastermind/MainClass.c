@@ -191,6 +191,7 @@ void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][G
 		{
 		case 1: // make a guess
 			makeGuess(playersGuess);
+			checkPlayersGuess(playersGuess, gameSolution, feedbackBoard);
 			break;
 		case 2: // exit
 			printf("\nExiting!");
@@ -263,7 +264,7 @@ void makeGuess(char playersGuess[SINGLE_ROW])
 	} // while
 } // makeGuess()
 
-void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW])
+void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], char feedbackBoard[GB_ROWS][GB_COLUMNS])
 {
 	int whitePegs = 0, blackPegs = 0;
 	int i, j;
@@ -293,5 +294,15 @@ void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_R
 			} // if
 		} // for
 	} // for
+
+	if(blackPegs == 4) // if all pegs are right
+	{
+		printf("\n\nThe Game Has Been Won!\n");
+	} // if
+	else
+	{
+		printf("\n\nWhite Pegs: %d", whitePegs);
+		printf("\nBlack Pegs: %d", blackPegs);
+	}
 
 } // checkPlayersGuess()

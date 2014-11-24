@@ -23,4 +23,6 @@ void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][G
 	char gameSolution[SINGLE_ROW], char playersGuess[SINGLE_ROW]);
 
 void makeGuess(char playersGuess[SINGLE_ROW]);
-void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW]);
+
+void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], 
+	char feedbackBoard[GB_ROWS][GB_COLUMNS]);
