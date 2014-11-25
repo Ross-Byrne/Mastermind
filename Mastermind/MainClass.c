@@ -8,8 +8,14 @@ int main(void)
 	char feedbackBoard[GB_ROWS][GB_COLUMNS]; 
 	char gameSolution[SINGLE_ROW]; 
 	char playersGuess[SINGLE_ROW]; 
+	char possibleChoices[7] = {'R', 'O', 'Y', 'G', 'B', 'I', 'V'};
 
 	int endGame = 0, menuChoice = 0, i, j;
+	int currentTurn = 0, gameWon = 0;
+
+	int *gameWonPtr;
+
+	gameWonPtr = &gameWon;
 
 	// instancating Variables
 	// game board and feedback board
@@ -54,7 +60,7 @@ int main(void)
 		switch(menuChoice)
 		{
 		case 1:
-			playGame(gameBoard, feedbackBoard, gameSolution, playersGuess);
+			playGame(gameBoard, feedbackBoard, gameSolution, playersGuess, currentTurn, gameWon);
 			break;
 		case 2:
 			printf("\nExiting!");
@@ -126,7 +132,8 @@ void printGameSolution(char gameSolution[SINGLE_ROW])
 
 } // printGameSolution()
 
-void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS])
+void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS],
+	char gameSolution[SINGLE_ROW], int gameWon)
 {
 	// lots of specific spacing to get the game board
 	// to print onto the screen properly
@@ -135,7 +142,8 @@ void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_R
 	int i, j;
 	
 	printf("\n===========================");
-	printf("\n= Game Board |  Feedback  =\n");
+	printf("\n= Game Board |  Feedback  =");
+	printf("\n===========================\n");
 	
 	for (i = 0; i < GB_ROWS; i++) 
 	{
@@ -159,9 +167,33 @@ void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_R
 
 	printf("===========================");
 
+	printf("\n======== Solution: ========");
+	printf("\n===========================\n");
+
+	// if gameWon == 0 = false, 1 = true
+	if(gameWon == 1) // if game has been won
+	{
+		for(i = 0; i < 4; i++)
+		{
+			printf("%c ", gameSolution[i]);
+		}
+	}
+	else if(gameWon == 0)
+	{
+		printf("========= ");
+		for(i = 0; i < 4; i++)
+		{
+			printf("? ");
+		}
+		printf("=========");
+		printf("\n===========================\n");
+	}
+
+
 } // printFullGameBoard()
 
-void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS], char gameSolution[SINGLE_ROW], char playersGuess[SINGLE_ROW])
+void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS], 
+	char gameSolution[SINGLE_ROW], char playersGuess[SINGLE_ROW], int currentTurn, int gameWon)
 {
 	int menuChoice = 0;
 
@@ -170,8 +202,6 @@ void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][G
 	gameSolution[1] = 'R';
 	gameSolution[2] = 'V';
 	gameSolution[3] = 'Y';
-
-	printGameBoard(gameBoard, feedbackBoard);
 
 	while(menuChoice != 99)
 	{
@@ -191,7 +221,9 @@ void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][G
 		{
 		case 1: // make a guess
 			makeGuess(playersGuess);
-			checkPlayersGuess(playersGuess, gameSolution, feedbackBoard);
+			checkPlayersGuess(playersGuess, gameSolution, feedbackBoard, currentTurn, gameWon);
+			addPlayersGuessToBoard(playersGuess,gameBoard, currentTurn);
+			printGameBoard(gameBoard, feedbackBoard, gameSolution, gameWon);
 			break;
 		case 2: // exit
 			printf("\nExiting!");
@@ -264,7 +296,7 @@ void makeGuess(char playersGuess[SINGLE_ROW])
 	} // while
 } // makeGuess()
 
-void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], char feedbackBoard[GB_ROWS][GB_COLUMNS])
+void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], char feedbackBoard[GB_ROWS][GB_COLUMNS], int currentTurn, int gameWon)
 {
 	int whitePegs = 0, blackPegs = 0;
 	int i, j;
@@ -295,14 +327,62 @@ void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_R
 		} // for
 	} // for
 
-	if(blackPegs == 4) // if all pegs are right
+	if(blackPegs == 4) // if all pegs are right, game is won
 	{
 		printf("\n\nThe Game Has Been Won!\n");
+		gameWon = 1;
 	} // if
-	else
+	else // if there are any feedback pegs to be shown
 	{
+		// gets total number of pegs to output to 
+		// feedback board.
+		int totalPegs = 0;
+
+		totalPegs += whitePegs + blackPegs;
+		
+		// outputs the white pegs first if there are any
+		// decreasing the total number of feedback pegs
+		// as it goes.
+		// then outputs the black pegs if there are any
+		while(totalPegs != 0)
+		{
+			if(whitePegs > 0)
+			{
+				for(i = 0; i < whitePegs; i++)
+				{
+					feedbackBoard[currentTurn][totalPegs-1] = 'W';
+					totalPegs--;
+				} // for
+			} // if
+
+			if(blackPegs > 0)
+			{
+				for(i = 0; i < blackPegs; i++)
+				{
+					feedbackBoard[currentTurn][totalPegs-1] = 'B';
+					totalPegs--;
+				} // for
+			} // if
+
+		} // while
+
+		// once this is done, the feedback pegs need to the shuffled
+		// so the player cant guess which pegs are wrong etc.
+
 		printf("\n\nWhite Pegs: %d", whitePegs);
 		printf("\nBlack Pegs: %d", blackPegs);
-	}
+	} // if
 
 } // checkPlayersGuess()
+
+void addPlayersGuessToBoard(char playersGuess[SINGLE_ROW], char gameBoard[GB_ROWS][GB_COLUMNS], int currentTurn)
+{
+	int i;
+	for(i = 0; i < 4; i++)
+	{
+		gameBoard[currentTurn][i] = playersGuess[i];
+	} // for
+
+	// moves on to the next turn
+	currentTurn++;
+} // addPlayersGuessToBoard
