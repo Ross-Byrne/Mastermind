@@ -7,30 +7,29 @@ int main(void)
 	char gameBoard[GB_ROWS][GB_COLUMNS]; 
 	char feedbackBoard[GB_ROWS][GB_COLUMNS]; 
 	char gameSolution[SINGLE_ROW]; 
-	char playersGuess[SINGLE_ROW]; 
+	char playersGuess[SINGLE_ROW];
+	char currentGuessFeedback[SINGLE_ROW];
 	char possibleChoices[7] = {'R', 'O', 'Y', 'G', 'B', 'I', 'V'};
 
 	int endGame = 0, menuChoice = 0, i, j;
 	int currentTurn = 0, gameWon = 0;
 
-	int *gameWonPtr;
-
-	gameWonPtr = &gameWon;
 
 	// instancating Variables
 	// game board and feedback board
-	for (i = 0; i < GB_ROWS; i++) {
-			for (j = 0; j < GB_COLUMNS; j++) {
-            gameBoard[i][j] = '.';
-			feedbackBoard[i][j] = '.';
-			} // for
+	for (i = 0; i < GB_ROWS; i++) 
+	{
+		for (j = 0; j < GB_COLUMNS; j++) {
+        gameBoard[i][j] = '.';
+		feedbackBoard[i][j] = '.';
 		} // for
+	} // for
 
 	// player Guess
 	for(i = 0; i < 4; i++)
 	{
 		playersGuess[i] = '.';
-	}
+	} // for
 
 	printf("Welcome To Mastermind!\n");
 
@@ -60,7 +59,41 @@ int main(void)
 		switch(menuChoice)
 		{
 		case 1:
-			playGame(gameBoard, feedbackBoard, gameSolution, playersGuess, currentTurn, gameWon);
+			menuChoice = 0;
+
+			generateGameSolution(gameSolution, possibleChoices);
+			printGameSolution(gameSolution);
+
+			while(menuChoice != 99)
+			{
+				printGameMenu();
+
+				// To make sure the number input is in the right range
+				do
+				{
+					printf("\n\nEnter Option: ");
+		
+					fflush(stdin); // flush buffer
+					scanf_s("%d",&menuChoice);
+
+				}while((menuChoice < 1) || (menuChoice > 2));
+
+				switch(menuChoice)
+				{
+				case 1: // make a guess
+					makeGuess(playersGuess);
+					checkPlayersGuess(playersGuess, gameSolution, feedbackBoard, currentGuessFeedback, currentTurn, gameWon);
+					addPlayersGuessToBoard(playersGuess,gameBoard, currentTurn);
+					printGameBoard(gameBoard, feedbackBoard, gameSolution, gameWon);
+					break;
+				case 2: // exit
+					printf("\nExiting!");
+					menuChoice = 99;
+					break;
+				} // switch
+
+			} // while
+
 			break;
 		case 2:
 			printf("\nExiting!");
@@ -133,7 +166,7 @@ void printGameSolution(char gameSolution[SINGLE_ROW])
 } // printGameSolution()
 
 void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS],
-	char gameSolution[SINGLE_ROW], int gameWon)
+	char gameSolution[], int gameWon)
 {
 	// lots of specific spacing to get the game board
 	// to print onto the screen properly
@@ -191,49 +224,6 @@ void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_R
 
 
 } // printFullGameBoard()
-
-void playGame(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS], 
-	char gameSolution[SINGLE_ROW], char playersGuess[SINGLE_ROW], int currentTurn, int gameWon)
-{
-	int menuChoice = 0;
-
-	// testing :O (setting game solution manually)
-	gameSolution[0] = 'O';
-	gameSolution[1] = 'R';
-	gameSolution[2] = 'V';
-	gameSolution[3] = 'Y';
-
-	while(menuChoice != 99)
-	{
-		printGameMenu();
-
-		// To make sure the number input is in the right range
-		do
-		{
-			printf("\n\nEnter Option: ");
-		
-			fflush(stdin); // flush buffer
-			scanf_s("%d",&menuChoice);
-
-		}while((menuChoice < 1) || (menuChoice > 2));
-
-		switch(menuChoice)
-		{
-		case 1: // make a guess
-			makeGuess(playersGuess);
-			checkPlayersGuess(playersGuess, gameSolution, feedbackBoard, currentTurn, gameWon);
-			addPlayersGuessToBoard(playersGuess,gameBoard, currentTurn);
-			printGameBoard(gameBoard, feedbackBoard, gameSolution, gameWon);
-			break;
-		case 2: // exit
-			printf("\nExiting!");
-			menuChoice = 99;
-			break;
-		} // switch
-
-	} // while
-
-} // playGame()
 
 void makeGuess(char playersGuess[SINGLE_ROW])
 {
@@ -296,10 +286,17 @@ void makeGuess(char playersGuess[SINGLE_ROW])
 	} // while
 } // makeGuess()
 
-void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], char feedbackBoard[GB_ROWS][GB_COLUMNS], int currentTurn, int gameWon)
+void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], char feedbackBoard[GB_ROWS][GB_COLUMNS], char currentGuessFeedback[SINGLE_ROW], int currentTurn, int gameWon)
 {
 	int whitePegs = 0, blackPegs = 0;
 	int i, j;
+
+	// resetting the current feedback
+	// to nothing
+	for(i = 0; i < 4; i++)
+	{
+		currentGuessFeedback[i] = '.';
+	} // for
 
 	// whitePegs = correct colour in wrong place
 	// blackPegs = correct colour in right place
@@ -350,7 +347,8 @@ void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_R
 			{
 				for(i = 0; i < whitePegs; i++)
 				{
-					feedbackBoard[currentTurn][totalPegs-1] = 'W';
+					currentGuessFeedback[totalPegs-1] = 'W';
+					//feedbackBoard[currentTurn][totalPegs-1] = 'W';
 					totalPegs--;
 				} // for
 			} // if
@@ -359,15 +357,25 @@ void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_R
 			{
 				for(i = 0; i < blackPegs; i++)
 				{
-					feedbackBoard[currentTurn][totalPegs-1] = 'B';
+					currentGuessFeedback[totalPegs-1] = 'B';
+					//feedbackBoard[currentTurn][totalPegs-1] = 'B';
 					totalPegs--;
 				} // for
 			} // if
 
 		} // while
 
-		// once this is done, the feedback pegs need to the shuffled
-		// so the player cant guess which pegs are wrong etc.
+		// shuffle feedback pegs so the player
+		// cannot guess which peg right or wrong
+		shuffleArray(currentGuessFeedback, 4);
+
+		// add the current feedback pegs into 
+		// the main game board
+
+		for(i = 0; i < 4; i++)
+		{
+			feedbackBoard[currentTurn][i] = currentGuessFeedback[i];
+		} // for
 
 		printf("\n\nWhite Pegs: %d", whitePegs);
 		printf("\nBlack Pegs: %d", blackPegs);
@@ -386,3 +394,46 @@ void addPlayersGuessToBoard(char playersGuess[SINGLE_ROW], char gameBoard[GB_ROW
 	// moves on to the next turn
 	currentTurn++;
 } // addPlayersGuessToBoard
+
+void shuffleArray(char array[], int arraySize)
+{
+	// A reworked version of the Fisher–Yates shuffle Algorithm
+
+	int i, j;
+	char temp;
+	time_t t;
+	
+	// Intializes random number generator
+	srand((unsigned)time(&t));
+
+	// Start from the last element and swap one by one
+	for (i = (arraySize-1); i > 0; i--)
+    {
+        // Pick a random index from 0 to i
+        j = rand() % (i+1);
+ 
+        // Swap array[i] with the element at random index
+		temp = array[i];
+		array[i] = array[j];
+		array[j] = temp;
+    } // for
+
+} // shuffleArray()
+
+void generateGameSolution(char gameSolution[SINGLE_ROW], char possibleChoices[7])
+{
+	int i;
+
+	// shuffles the possible solutions array
+	// 7 is the size of possibleChoices array
+	shuffleArray(possibleChoices, 7);
+
+	// add first 4 elements of shuffled array as 
+	// the games solution
+	for(i = 0; i < 4; i++)
+	{
+		gameSolution[i] = possibleChoices[i];
+	}
+
+} // generateGameSolution()
+
