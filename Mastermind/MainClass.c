@@ -12,14 +12,7 @@ int main(void)
 	char possibleChoices[7] = {'R', 'O', 'Y', 'G', 'B', 'I', 'V'};
 
 	int endGame = 0, menuChoice = 0, i, j;
-	int currentTurn = 0, gameWon = 0;
-
-	int *ptr_GameWon;
-
-	ptr_GameWon = &gameWon;
-
-
-
+	int currentTurn = 0, showSolution = 0;
 
 	// instancating Variables
 	// game board and feedback board
@@ -88,12 +81,17 @@ int main(void)
 				{
 				case 1: // make a guess
 					makeGuess(playersGuess);
-					gameWon = checkPlayersGuess(playersGuess, gameSolution, feedbackBoard, currentGuessFeedback, currentTurn);
+					showSolution = checkPlayersGuess(playersGuess, gameSolution, feedbackBoard, currentGuessFeedback, currentTurn);
 					addPlayersGuessToBoard(playersGuess,gameBoard, currentTurn);
-					printGameBoard(gameBoard, feedbackBoard, gameSolution, gameWon);
+					printGameBoard(gameBoard, feedbackBoard, gameSolution, showSolution);
 
 					// moves on to the next turn
 					currentTurn++;
+
+					if(currentTurn > 15)
+					{
+						
+					}
 					break;
 				case 2: // exit
 					printf("\nExiting!");
@@ -175,7 +173,7 @@ void printGameSolution(char gameSolution[SINGLE_ROW])
 } // printGameSolution()
 
 void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS],
-	char gameSolution[], int gameWon)
+	char gameSolution[], int showSolution)
 {
 	// lots of specific spacing to get the game board
 	// to print onto the screen properly
@@ -212,8 +210,8 @@ void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_R
 	printf("\n======== Solution: ========");
 	printf("\n===========================\n");
 
-	// if gameWon == 0 = false, 1 = true
-	if(gameWon == 1) // if game has been won
+	// if showSolution == 0 = false, 1 = true
+	if(showSolution == 1) // if game has been won
 	{
 		printf("========= ");
 		for(i = 0; i < 4; i++)
@@ -223,7 +221,7 @@ void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_R
 		printf("=========");
 		printf("\n===========================\n");
 	}
-	else if(gameWon == 0)
+	else if(showSolution == 0)
 	{
 		printf("========= ");
 		for(i = 0; i < 4; i++)
@@ -320,10 +318,14 @@ int checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_RO
 		{
 			// if the contents of gameSolution and playersGuess match (eg the right colour)
 			// AND the colours are in the same place
-			// SO: if right colour is in right place
+			// SO: if right colour is in right place.
+
+			// break after peg is gotten so exta pegs aren't added
+			// if a colour is guessed more then once
 			if((gameSolution[i] == playersGuess[j]) && (i == j)) 
 			{
 				blackPegs++; // player gets black feedback peg
+				break;
 			} // if
 
 			// if the contents of gameSolution and playersGuess match (eg the right colour)
@@ -332,6 +334,7 @@ int checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_RO
 			if(gameSolution[i] == playersGuess[j] && i != j) 
 			{
 				whitePegs++; // player gets white feedback peg
+				break;
 			} // if
 		} // for
 	} // for
