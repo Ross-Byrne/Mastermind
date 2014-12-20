@@ -132,6 +132,3 @@ int main(void)
 	printf("\n\n\n");
 	system("pause");
 } // main()
- 
-
-
