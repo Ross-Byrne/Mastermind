@@ -4,8 +4,10 @@
 int main(void)
 {
 	// Variables
-	char gameBoard[GB_ROWS][GB_COLUMNS]; 
-	char feedbackBoard[GB_ROWS][GB_COLUMNS]; 
+	char playerName[MAX_NAME] = "Player";
+
+	char gameBoard[TURNS][GB_COLUMNS]; 
+	char feedbackBoard[TURNS][GB_COLUMNS]; 
 	char gameSolution[SINGLE_ROW]; 
 	char playersGuess[SINGLE_ROW];
 	char currentGuessFeedback[SINGLE_ROW];
@@ -14,9 +16,11 @@ int main(void)
 	int endGame = 0, menuChoice = 0, i, j;
 	int currentTurn = 0, showSolution = 0;
 
+	int gameTurns = TURNS;
+
 	// instancating Variables
 	// game board and feedback board
-	for (i = 0; i < GB_ROWS; i++) 
+	for (i = 0; i < TURNS; i++) 
 	{
 		for (j = 0; j < GB_COLUMNS; j++) {
         gameBoard[i][j] = '.';
@@ -53,7 +57,7 @@ int main(void)
 			fflush(stdin); // flush buffer
 			scanf_s("%d",&menuChoice);
 
-		}while((menuChoice < 1) || (menuChoice > 2));
+		}while((menuChoice < 1) || (menuChoice > 3));
 
 		switch(menuChoice)
 		{
@@ -81,18 +85,24 @@ int main(void)
 				{
 				case 1: // make a guess
 					makeGuess(playersGuess);
+
+					// if showSolution = 1, it shows the game solution and the game is over
 					showSolution = checkPlayersGuess(playersGuess, gameSolution, feedbackBoard, currentGuessFeedback, currentTurn);
 					addPlayersGuessToBoard(playersGuess,gameBoard, currentTurn);
-					printGameBoard(gameBoard, feedbackBoard, gameSolution, showSolution);
-
+					printGameBoard(gameBoard, feedbackBoard, gameSolution, showSolution, gameTurns);
+					printf("%d",currentTurn);
 					// moves on to the next turn
 					currentTurn++;
 
-					if(currentTurn > 15)
+					if(currentTurn+1 > gameTurns)
 					{
-						
+						showSolution = 1;
+						printGameBoard(gameBoard, feedbackBoard, gameSolution, showSolution, gameTurns);
+						printf("\n\nThe Game is Over!\nYou Ran Out Of Turns!\n");
+						break;
 					}
 					break;
+				
 				case 2: // exit
 					printf("\nExiting!");
 					menuChoice = 99;
@@ -102,7 +112,11 @@ int main(void)
 			} // while
 
 			break;
-		case 2:
+		case 2: // options
+				options(gameTurns, playerName);
+
+				break;
+		case 3:
 			printf("\nExiting!");
 			endGame = 99;
 			break;
@@ -118,7 +132,8 @@ void printMainGameMenu()
 {
 	printf("\n\nMain Game Menu\n");
 	printf("\n1.) Start Playing Mastermind.");
-	printf("\n2.) Exit.");
+	printf("\n2.) Options.");
+	printf("\n3.) Exit.");
 } // printGameMenu()
 
 void printGameMenu()
@@ -128,13 +143,13 @@ void printGameMenu()
 	printf("\n2.) Exit.");
 } // printGameMenu()
 
-void printFeedbackPegs(char feedbackBoard[GB_ROWS][GB_COLUMNS])
+void printFeedbackPegs(char feedbackBoard[TURNS][GB_COLUMNS], int gameTurns)
 {
 	int i, j;
 
 	printf("\nThe Feedback Board\n\n");
 	// prints the game feedback board
-	for (i = 0; i < GB_ROWS; i++) 
+	for (i = 0; i < gameTurns; i++) 
 	{
 		for (j = 0; j < GB_COLUMNS; j++) 
 		{
@@ -172,8 +187,8 @@ void printGameSolution(char gameSolution[SINGLE_ROW])
 
 } // printGameSolution()
 
-void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_ROWS][GB_COLUMNS],
-	char gameSolution[], int showSolution)
+void printGameBoard(char gameBoard[TURNS][GB_COLUMNS], char feedbackBoard[TURNS][GB_COLUMNS],
+	char gameSolution[], int showSolution, int gameTurns)
 {
 	// lots of specific spacing to get the game board
 	// to print onto the screen properly
@@ -185,7 +200,7 @@ void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_R
 	printf("\n= Game Board |  Feedback  =");
 	printf("\n===========================\n");
 	
-	for (i = 0; i < GB_ROWS; i++) 
+	for (i = 0; i < gameTurns; i++) 
 	{
 		printf("=  ");
 		// game board
@@ -231,8 +246,6 @@ void printGameBoard(char gameBoard[GB_ROWS][GB_COLUMNS], char feedbackBoard[GB_R
 		printf("=========");
 		printf("\n===========================\n");
 	}
-
-
 } // printFullGameBoard()
 
 void makeGuess(char playersGuess[SINGLE_ROW])
@@ -296,7 +309,8 @@ void makeGuess(char playersGuess[SINGLE_ROW])
 	} // while
 } // makeGuess()
 
-int checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], char feedbackBoard[GB_ROWS][GB_COLUMNS], char currentGuessFeedback[SINGLE_ROW], int currentTurn)
+int checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], char feedbackBoard[TURNS][GB_COLUMNS], 
+	char currentGuessFeedback[SINGLE_ROW], int currentTurn)
 {
 	int whitePegs = 0, blackPegs = 0;
 	int i, j;
@@ -398,7 +412,7 @@ int checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_RO
 
 } // checkPlayersGuess()
 
-void addPlayersGuessToBoard(char playersGuess[SINGLE_ROW], char gameBoard[GB_ROWS][GB_COLUMNS], int currentTurn)
+void addPlayersGuessToBoard(char playersGuess[SINGLE_ROW], char gameBoard[TURNS][GB_COLUMNS], int currentTurn)
 {
 	int i;
 	for(i = 0; i < 4; i++)
@@ -448,4 +462,45 @@ void generateGameSolution(char gameSolution[SINGLE_ROW], char possibleChoices[7]
 	}
 
 } // generateGameSolution()
+
+void options(int gameTurns, char playerName[MAX_NAME])
+{
+	int menuChoice = 0;
+
+	printf("\nOptions\n");
+
+	while(menuChoice != 99)
+	{
+		printf("\nThe Player's Name is: %s", playerName);
+		printf("\nYour current game is set to have %d turns.\n", gameTurns);
+		// To make sure the number input is in the right range
+		do
+		{
+			printf("\n1.) Set Player Name.");
+			printf("\n2.) Set Number of Turns Allowed.");
+			printf("\n3.) View The Top Scores.");
+			printf("\n4.) Go Back To Main Menu.");
+
+			printf("\n\nEnter Option: ");
+		
+			fflush(stdin); // flush buffer
+			scanf_s("%d",&menuChoice);
+
+		}while((menuChoice < 1) || (menuChoice > 4));
+		
+		switch(menuChoice)
+		{
+		case 1: // set player name
+			break;
+		case 2: // set number of turns allowed
+			break;
+		case 3: // view top scores
+			break;
+		case 4: // exit
+			printf("\nExiting!");
+			menuChoice = 99;
+			break;
+		} // switch
+	} // while
+} // options
 
