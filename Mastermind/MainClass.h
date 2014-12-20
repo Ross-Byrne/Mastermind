@@ -24,12 +24,12 @@ void printGameSolution(char gameSolution[SINGLE_ROW]);
 
 void makeGuess(char playersGuess[SINGLE_ROW]);
 
-int checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], 
-	char feedbackBoard[TURNS][GB_COLUMNS], char currentGuessFeedback[SINGLE_ROW], int currentTurn);
+void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], 
+	char feedbackBoard[TURNS][GB_COLUMNS], char currentGuessFeedback[SINGLE_ROW], int currentTurn, int *showSolution);
 
 void addPlayersGuessToBoard(char playersGuess[SINGLE_ROW], char gameBoard[TURNS][GB_COLUMNS], int currentTurn);
 
 void shuffleArray(char array[], int arraySize);
 void generateGameSolution(char gameSolution[SINGLE_ROW], char possibleChoices[7]);
 
-void options(int gameTurns, char playerName[MAX_NAME]);
+void options(int *gameTurnsPtr, char playerName[MAX_NAME]);

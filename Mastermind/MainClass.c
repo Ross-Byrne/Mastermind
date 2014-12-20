@@ -18,6 +18,12 @@ int main(void)
 
 	int gameTurns = TURNS;
 
+	int *gameTurnsPtr;
+	int *showSolutionPtr;
+
+	gameTurnsPtr = &gameTurns;
+	showSolutionPtr = &showSolution;
+
 	// instancating Variables
 	// game board and feedback board
 	for (i = 0; i < TURNS; i++) 
@@ -87,10 +93,10 @@ int main(void)
 					makeGuess(playersGuess);
 
 					// if showSolution = 1, it shows the game solution and the game is over
-					showSolution = checkPlayersGuess(playersGuess, gameSolution, feedbackBoard, currentGuessFeedback, currentTurn);
+					checkPlayersGuess(playersGuess, gameSolution, feedbackBoard, currentGuessFeedback, currentTurn, showSolutionPtr);
 					addPlayersGuessToBoard(playersGuess,gameBoard, currentTurn);
 					printGameBoard(gameBoard, feedbackBoard, gameSolution, showSolution, gameTurns);
-					printf("%d",currentTurn);
+					printf("\nCurrent Turn: %d.",currentTurn+1);
 					// moves on to the next turn
 					currentTurn++;
 
@@ -113,7 +119,7 @@ int main(void)
 
 			break;
 		case 2: // options
-				options(gameTurns, playerName);
+				options(gameTurnsPtr, playerName);
 
 				break;
 		case 3:
@@ -309,8 +315,8 @@ void makeGuess(char playersGuess[SINGLE_ROW])
 	} // while
 } // makeGuess()
 
-int checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], char feedbackBoard[TURNS][GB_COLUMNS], 
-	char currentGuessFeedback[SINGLE_ROW], int currentTurn)
+void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_ROW], char feedbackBoard[TURNS][GB_COLUMNS], 
+	char currentGuessFeedback[SINGLE_ROW], int currentTurn, int *showSolutionPtr)
 {
 	int whitePegs = 0, blackPegs = 0;
 	int i, j;
@@ -356,7 +362,7 @@ int checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_RO
 	if(blackPegs == 4) // if all pegs are right, game is won
 	{
 		printf("\n\nThe Game Has Been Won!\n");
-		return 1;
+		*showSolutionPtr = 1;
 	} // if
 	else // if there are any feedback pegs to be shown
 	{
@@ -407,7 +413,7 @@ int checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_RO
 		printf("\n\nWhite Pegs: %d", whitePegs);
 		printf("\nBlack Pegs: %d", blackPegs);
 
-		return 0;
+		*showSolutionPtr = 0;
 	} // if
 
 } // checkPlayersGuess()
@@ -463,16 +469,16 @@ void generateGameSolution(char gameSolution[SINGLE_ROW], char possibleChoices[7]
 
 } // generateGameSolution()
 
-void options(int gameTurns, char playerName[MAX_NAME])
+void options(int *gameTurnsPtr, char playerName[MAX_NAME])
 {
 	int menuChoice = 0;
 
-	printf("\nOptions\n");
+	printf("\nOptions");
 
 	while(menuChoice != 99)
 	{
-		printf("\nThe Player's Name is: %s", playerName);
-		printf("\nYour current game is set to have %d turns.\n", gameTurns);
+		printf("\n\nThe Player's Name is: %s", playerName);
+		printf("\nYour current game is set to have %d turns.\n", *gameTurnsPtr);
 		// To make sure the number input is in the right range
 		do
 		{
@@ -491,8 +497,22 @@ void options(int gameTurns, char playerName[MAX_NAME])
 		switch(menuChoice)
 		{
 		case 1: // set player name
+			printf("\nSet The Player's Name: ");
+			fflush(stdin); // flush the buffer
+			gets(playerName);
 			break;
 		case 2: // set number of turns allowed
+			// To make sure the number input is in the right range
+			do
+			{
+				printf("\nSet The Number of Turns (up to 15 turns): ");
+		
+				fflush(stdin); // flush buffer
+				scanf_s("%d",&menuChoice);
+
+			}while((menuChoice < 1) || (menuChoice > 15));
+
+			*gameTurnsPtr = menuChoice;
 			break;
 		case 3: // view top scores
 			break;
