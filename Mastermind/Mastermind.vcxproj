@@ -60,11 +60,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="EasyMode.c" />
+    <ClCompile Include="Functions.c" />
     <ClCompile Include="MainClass.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="EasyMode.h" />
+    <ClInclude Include="Functions.h" />
     <ClInclude Include="MainClass.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

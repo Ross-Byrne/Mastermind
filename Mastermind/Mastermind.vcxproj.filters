@@ -18,7 +18,7 @@
     <ClCompile Include="MainClass.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EasyMode.c">
+    <ClCompile Include="Functions.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -26,7 +26,7 @@
     <ClInclude Include="MainClass.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EasyMode.h">
+    <ClInclude Include="Functions.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
