@@ -95,26 +95,25 @@ int main(void)
 					// if showSolution = 1, it shows the game solution and the game is over
 					checkPlayersGuess(playersGuess, gameSolution, feedbackBoard, currentGuessFeedback, currentTurn, showSolutionPtr);
 					addPlayersGuessToBoard(playersGuess,gameBoard, currentTurn);
-					printGameBoard(gameBoard, feedbackBoard, gameSolution, showSolution, gameTurns);
-					printf("\nCurrent Turn: %d.",currentTurn+1);
+
 					// moves on to the next turn
 					currentTurn++;
 
 					if(currentTurn+1 > gameTurns)
 					{
-						showSolution = 1;
-						printGameBoard(gameBoard, feedbackBoard, gameSolution, showSolution, gameTurns);
-						printf("\n\nThe Game is Over!\nYou Ran Out Of Turns!\n");
-						break;
-					}
+						showSolution = 2;
+					} // if
+
+					printGameBoard(gameBoard, feedbackBoard, gameSolution, showSolution, gameTurns);
+
+					// shows the number of turns used out of max goes
+					printf("\n%d Out Of %d Turns Used!",currentTurn, gameTurns);
 					break;
-				
 				case 2: // exit
 					printf("\nExiting!");
 					menuChoice = 99;
 					break;
 				} // switch
-
 			} // while
 
 			break;
@@ -202,7 +201,7 @@ void printGameBoard(char gameBoard[TURNS][GB_COLUMNS], char feedbackBoard[TURNS]
 
 	int i, j;
 	
-	printf("\n===========================");
+	printf("\n\n===========================");
 	printf("\n= Game Board |  Feedback  =");
 	printf("\n===========================\n");
 	
@@ -232,7 +231,7 @@ void printGameBoard(char gameBoard[TURNS][GB_COLUMNS], char feedbackBoard[TURNS]
 	printf("\n===========================\n");
 
 	// if showSolution == 0 = false, 1 = true
-	if(showSolution == 1) // if game has been won
+	if(showSolution == 1 || showSolution == 2) // if game has been won
 	{
 		printf("========= ");
 		for(i = 0; i < 4; i++)
@@ -241,6 +240,15 @@ void printGameBoard(char gameBoard[TURNS][GB_COLUMNS], char feedbackBoard[TURNS]
 		}
 		printf("=========");
 		printf("\n===========================\n");
+
+		if(showSolution == 1)
+		{
+		printf("\nThe Game Has Been Won!\n");
+		}
+		else
+		{
+		printf("\nThe Game is Over!\nYou Ran Out Of Turns!\n");
+		}
 	}
 	else if(showSolution == 0)
 	{
@@ -361,7 +369,6 @@ void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_R
 
 	if(blackPegs == 4) // if all pegs are right, game is won
 	{
-		printf("\n\nThe Game Has Been Won!\n");
 		*showSolutionPtr = 1;
 	} // if
 	else // if there are any feedback pegs to be shown
