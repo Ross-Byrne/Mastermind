@@ -1,5 +1,17 @@
 #include "Functions.h"
 
+void printPegSelectionOptions()
+{
+	printf("\nGuess The Peg!\n");
+	printf("\n1.) Red.");
+	printf("\n2.) Orange.");
+	printf("\n3.) Yellow.");
+	printf("\n4.) Green.");
+	printf("\n5.) Blue.");
+	printf("\n6.) Indigo.");
+	printf("\n7.) Violet.");
+} // printPegSelectionOptions()
+
 void printMainGameMenu()
 {
 	printf("\n\nMain Game Menu\n");
@@ -14,6 +26,28 @@ void printGameMenu()
 	printf("\n1.) Make A Guess.");
 	printf("\n2.) Exit.");
 } // printGameMenu()
+
+void printOptionsMenu()
+{
+	printf("\n1.) Set Player Name.");
+	printf("\n2.) Set Game Difficulty.");
+	printf("\n3.) Set Number of Turns Allowed.");
+	printf("\n4.) View The Top Scores.");
+	printf("\n5.) Go Back To Main Menu.");
+} // printOptionsMenu()
+
+void printChangeGameDifMenu()
+{
+	printf("\n\nChoose a Game Difficuly.\n");
+	printf("\nEasy = 4 Colours With No Repeats or Blanks.");
+	printf("\nMedium = 4 Colours With Repeats, But No Blanks.");
+	printf("\nHard = 4 Colours With Repeats And Blank Spaces As Options.");
+
+	printf("\n\nChoose Game Difficulty.");
+	printf("\n1.) Easy.");
+	printf("\n2.) Medium.");
+	printf("\n3.) Hard.");
+} // printChangeGameDifMenu()
 
 void printFeedbackPegs(char feedbackBoard[TURNS][GB_COLUMNS], int gameTurns)
 {
@@ -129,63 +163,74 @@ void printGameBoard(char gameBoard[TURNS][GB_COLUMNS], char feedbackBoard[TURNS]
 	}
 } // printFullGameBoard()
 
-void makeGuess(char playersGuess[SINGLE_ROW])
+void makeGuess(char playersGuess[SINGLE_ROW], char gameDif[MAX_STRING])
 {
 	int guessNum = 0, menuChoice = 0;
+	int numOfOptions = 7;
 
-	printf("\nGuess The Peg!\n");
-	printf("\n1.) Red.");
-	printf("\n2.) Orange.");
-	printf("\n3.) Yellow.");
-	printf("\n4.) Green.");
-	printf("\n5.) Blue.");
-	printf("\n6.) Indigo.");
-	printf("\n7.) Violet.\n");
+	// prints basic options
+	printPegSelectionOptions();
 
+	// if to decide game dif
+	if (strcmp(gameDif, "Hard") == 0)
+	{
+		printf("\n8.) Blank Space.\n");
+		numOfOptions = 8;
+	}
+	else
+	{
+		printf("\n");
+		numOfOptions = 7;
+	} // if else
+	
 	while(guessNum < 4)
 	{
 		// To make sure the number input is in the right range
 		do
 		{
-			printf("\n\nEnter Option: ");
+			printf("\n\nEnter Option For Peg %d: ", guessNum+1);
 		
 			fflush(stdin); // flush buffer
 			scanf_s("%d",&menuChoice);
 
-		}while((menuChoice < 1) || (menuChoice > 7));
+		}while((menuChoice < 1) || (menuChoice > numOfOptions));
 
 		guessNum++;
 
 		switch(menuChoice)
 		{
 		case 1:
-			printf("\nYou Guess Peg Number %d Is Red", guessNum);
+			printf("\nYou Guessed Peg Number %d Is Red!", guessNum);
 			playersGuess[guessNum-1] = 'R'; // -1 because 0 index
 			break;
 		case 2:
-			printf("\nYou Guess Peg Number %d Is Orange", guessNum);
+			printf("\nYou Guessed Peg Number %d Is Orange!", guessNum);
 			playersGuess[guessNum-1] = 'O'; // -1 because 0 index
 			break;
 		case 3:
-			printf("\nYou Guess Peg Number %d Is Yellow", guessNum);
+			printf("\nYou Guessed Peg Number %d Is Yellow!", guessNum);
 			playersGuess[guessNum-1] = 'Y'; // -1 because 0 index
 			break;
 		case 4:
-			printf("\nYou Guess Peg Number %d Is Green", guessNum);
+			printf("\nYou Guessed Peg Number %d Is Green!", guessNum);
 			playersGuess[guessNum-1] = 'G'; // -1 because 0 index
 			break;
 		case 5:
-			printf("\nYou Guess Peg Number %d Is Blue", guessNum);
+			printf("\nYou Guessed Peg Number %d Is Blue!", guessNum);
 			playersGuess[guessNum-1] = 'B'; // -1 because 0 index
 			break;
 		case 6:
-			printf("\nYou Guess Peg Number %d Is Indigo", guessNum);
+			printf("\nYou Guessed Peg Number %d Is Indigo!", guessNum);
 			playersGuess[guessNum-1] = 'I'; // -1 because 0 index
 			break;
 		case 7:
-			printf("\nYou Guess Peg Number %d Is Violet", guessNum);
+			printf("\nYou Guessed Peg Number %d Is Violet!", guessNum);
 			playersGuess[guessNum-1] = 'V'; // -1 because 0 index
-			break;		
+			break;	
+		case 8:
+			printf("\nYou Guessed Peg Number %d Is A Blank Space!", guessNum);
+			playersGuess[guessNum-1] = '.'; // -1 because 0 index
+			break;
 		} // switch
 	} // while
 } // makeGuess()
@@ -343,7 +388,7 @@ void generateGameSolution(char gameSolution[SINGLE_ROW], char possibleChoices[7]
 
 } // generateGameSolution()
 
-void options(int *gameTurnsPtr, char playerName[MAX_NAME])
+void options(int *gameTurnsPtr, char playerName[MAX_STRING], char gameDif[MAX_STRING])
 {
 	int menuChoice = 0;
 
@@ -352,21 +397,19 @@ void options(int *gameTurnsPtr, char playerName[MAX_NAME])
 	while(menuChoice != 99)
 	{
 		printf("\n\nThe Player's Name is: %s", playerName);
+		printf("\nThe Games Difficulty Level is: %s", gameDif);
 		printf("\nYour current game is set to have %d turns.\n", *gameTurnsPtr);
 		// To make sure the number input is in the right range
 		do
 		{
-			printf("\n1.) Set Player Name.");
-			printf("\n2.) Set Number of Turns Allowed.");
-			printf("\n3.) View The Top Scores.");
-			printf("\n4.) Go Back To Main Menu.");
-
+			printOptionsMenu();
+			
 			printf("\n\nEnter Option: ");
 		
 			fflush(stdin); // flush buffer
 			scanf_s("%d",&menuChoice);
 
-		}while((menuChoice < 1) || (menuChoice > 4));
+		}while((menuChoice < 1) || (menuChoice > 5));
 		
 		switch(menuChoice)
 		{
@@ -375,7 +418,33 @@ void options(int *gameTurnsPtr, char playerName[MAX_NAME])
 			fflush(stdin); // flush the buffer
 			gets(playerName);
 			break;
-		case 2: // set number of turns allowed
+		case 2: // set game difficulty
+
+			printChangeGameDifMenu();
+
+			do
+			{
+				printf("\n\nEnter Option: ");
+		
+				fflush(stdin); // flush buffer
+				scanf_s("%d",&menuChoice);
+
+			}while((menuChoice < 1) || (menuChoice > 3));
+
+			if(menuChoice == 1) // easy dif
+			{
+				strcpy(gameDif, "Easy");
+			}
+			else if(menuChoice == 2) // medium dif
+			{
+				strcpy(gameDif, "Medium");
+			}
+			else // hard dif
+			{
+				strcpy(gameDif, "Hard");
+			} // if else
+			break;
+		case 3: // set number of turns allowed
 			// To make sure the number input is in the right range
 			do
 			{
@@ -388,9 +457,9 @@ void options(int *gameTurnsPtr, char playerName[MAX_NAME])
 
 			*gameTurnsPtr = menuChoice;
 			break;
-		case 3: // view top scores
+		case 4: // view top scores
 			break;
-		case 4: // exit
+		case 5: // exit
 			printf("\nExiting!");
 			menuChoice = 99;
 			break;

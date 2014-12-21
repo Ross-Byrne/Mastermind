@@ -4,7 +4,8 @@
 int main(void)
 {
 	// Variables
-	char playerName[MAX_NAME] = "Player";
+	char gameDif[MAX_STRING] = "Easy";
+	char playerName[MAX_STRING] = "Player";
 
 	char gameBoard[TURNS][GB_COLUMNS]; 
 	char feedbackBoard[TURNS][GB_COLUMNS]; 
@@ -18,11 +19,15 @@ int main(void)
 
 	int gameTurns = TURNS;
 
+	// points
 	int *gameTurnsPtr;
 	int *showSolutionPtr;
+	char *gameDifPtr;
 
+	// pointing pointers
 	gameTurnsPtr = &gameTurns;
 	showSolutionPtr = &showSolution;
+	gameDifPtr = gameDif;
 
 	// instancating Variables
 	// game board and feedback board
@@ -100,7 +105,7 @@ int main(void)
 				switch(menuChoice)
 				{
 				case 1: // make a guess
-					makeGuess(playersGuess);
+					makeGuess(playersGuess, gameDif);
 
 					// if showSolution = 1, it shows the game solution and the game is over
 					checkPlayersGuess(playersGuess, gameSolution, feedbackBoard, currentGuessFeedback, currentTurn, showSolutionPtr);
@@ -149,18 +154,15 @@ int main(void)
 					break;
 				} // switch
 			} // while
-
 			break;
 		case 2: // options
-				options(gameTurnsPtr, playerName);
-
+				options(gameTurnsPtr, playerName, gameDif);
 				break;
 		case 3:
 			printf("\nExiting!");
 			endGame = 99;
 			break;
 		} // switch
-	
 	} // while
 
 	printf("\n\n\n");
