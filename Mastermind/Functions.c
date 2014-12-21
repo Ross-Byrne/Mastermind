@@ -510,3 +510,55 @@ void options(int *gameTurnsPtr, char playerName[MAX_STRING], char gameDif[MAX_ST
 		} // switch
 	} // while
 } // options()
+
+void saveScore()
+{
+	FILE *fPtr;
+
+	// open file
+	fPtr = fopen(FILENAME, APPENDMODE);
+	if ( fPtr == NULL )
+	{
+		printf("\n\n\tCould Not open file\n");
+	} // if
+
+	// write to the file
+	//  do stuff
+	fprintf(fPtr, "\nHello file world!!");
+	fprintf(fPtr, "Hello Joe!");
+	fprintf(fPtr, "Lets Make Tea");
+
+	fprintf(fPtr, "\nHello file world!!");
+	fprintf(fPtr, "Hello Joe!");
+	fprintf(fPtr, "Lets Make Tea");
+
+	fprintf(fPtr, "\nHello file world!!");
+	fprintf(fPtr, "Hello Joe!");
+	fprintf(fPtr, "Lets Make Tea");
+
+	// close the file
+	fclose(fPtr);
+} // saveScore()
+
+void loadScores()
+{
+	FILE *fPtr;
+	int i=0;
+	char strBuffer[MAX_COUNT + 1];	// +1 accounts for \0 null character
+
+	fPtr = fopen(FILENAME, READMODE);
+	if ( fPtr == NULL)
+	{
+		printf("\n\nCould Not open file %s", FILENAME);
+	} // if
+
+	do // read all lines in the file
+	{
+		fgets(strBuffer, MAX_COUNT, fPtr);
+		printf("\nLine %d: %s",++i, strBuffer);
+	} while( !feof(fPtr) ); // haven't reached end of file
+
+	//then close the file
+	fclose(fPtr);
+
+} // loadScores()

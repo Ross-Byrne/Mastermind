@@ -20,7 +20,7 @@ int main(void)
 
 	int gameTurns = TURNS;
 
-	// points
+	// pointers
 	int *gameTurnsPtr;
 	int *showSolutionPtr;
 	char *gameDifPtr;
@@ -45,6 +45,9 @@ int main(void)
 	{
 		playersGuess[i] = '.';
 	} // for
+
+	saveScore();
+	loadScores();
 
 	printf("Welcome To Mastermind!\n");
 

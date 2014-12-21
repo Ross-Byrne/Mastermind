@@ -11,6 +11,14 @@
 // num of places in a row
 #define SINGLE_ROW 4
 
+// File Reading and Writing
+#define FILENAME "GameScores.txt"
+#define WRITEMODE "w"
+#define READMODE "r"
+#define APPENDMODE "a"
+
+#define MAX_COUNT 200 
+
 // Fuctions
 void printPegSelectionOptions();
 void printMainGameMenu();
@@ -36,3 +44,6 @@ void generateGameSolution(char gameSolution[SINGLE_ROW], char possibleChoices[7]
 	char gameDif[MAX_STRING]);
 
 void options(int *gameTurnsPtr, char playerName[MAX_STRING], char gameDif[MAX_STRING]);
+
+void saveScore();
+void loadScores();
