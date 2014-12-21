@@ -69,6 +69,16 @@ int main(void)
 		{
 		case 1:
 			menuChoice = 0;
+			currentTurn = 0;
+
+			// clears game board and feedback board
+			for (i = 0; i < TURNS; i++) 
+			{
+				for (j = 0; j < GB_COLUMNS; j++) {
+				gameBoard[i][j] = '.';
+				feedbackBoard[i][j] = '.';
+				} // for
+			} // for
 
 			generateGameSolution(gameSolution, possibleChoices);
 			printGameSolution(gameSolution);
@@ -104,14 +114,38 @@ int main(void)
 						showSolution = 2;
 					} // if
 
+					// prints the game board
 					printGameBoard(gameBoard, feedbackBoard, gameSolution, showSolution, gameTurns);
 
 					// shows the number of turns used out of max goes
 					printf("\n%d Out Of %d Turns Used!",currentTurn, gameTurns);
 					break;
 				case 2: // exit
-					printf("\nExiting!");
-					menuChoice = 99;
+					printf("\n\nAre You Sure You Want To Exit?");
+					printf("\nAll Progress Will Be Lost!\n");
+					printf("\nExit Current Game?\n");
+					printf("\n1.) Yes.");
+					printf("\n2.) No.");
+
+					// To make sure the number input is in the right range
+					do
+					{
+						printf("\n\nEnter Option: ");
+		
+						fflush(stdin); // flush buffer
+						scanf_s("%d",&menuChoice);
+
+					}while((menuChoice < 1) || (menuChoice > 2));
+
+					if(menuChoice == 1)
+					{
+						printf("\nExiting!");
+						menuChoice = 99;
+					}
+					else
+					{
+						printf("\nGoing Back To Game!.");
+					}
 					break;
 				} // switch
 			} // while
