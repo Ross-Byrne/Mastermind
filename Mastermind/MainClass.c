@@ -13,6 +13,7 @@ int main(void)
 	char playersGuess[SINGLE_ROW];
 	char currentGuessFeedback[SINGLE_ROW];
 	char possibleChoices[7] = {'R', 'O', 'Y', 'G', 'B', 'I', 'V'};
+	char possibleHardChoices[8] = {'R', 'O', 'Y', 'G', 'B', 'I', 'V', '.'};
 
 	int endGame = 0, menuChoice = 0, i, j;
 	int currentTurn = 0, showSolution = 0;
@@ -85,7 +86,7 @@ int main(void)
 				} // for
 			} // for
 
-			generateGameSolution(gameSolution, possibleChoices);
+			generateGameSolution(gameSolution, possibleChoices, possibleHardChoices, gameDif);
 			printGameSolution(gameSolution);
 
 			while(menuChoice != 99)

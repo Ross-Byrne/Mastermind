@@ -371,20 +371,64 @@ void shuffleArray(char array[], int arraySize)
 
 } // shuffleArray()
 
-void generateGameSolution(char gameSolution[SINGLE_ROW], char possibleChoices[7])
+void generateGameSolution(char gameSolution[SINGLE_ROW], char possibleChoices[7], char possibleHardChoices[8], 
+	char gameDif[MAX_STRING])
 {
-	int i;
+	int i, j;
+	time_t t;
 
-	// shuffles the possible solutions array
-	// 7 is the size of possibleChoices array
-	shuffleArray(possibleChoices, 7);
-
-	// add first 4 elements of shuffled array as 
-	// the games solution
-	for(i = 0; i < 4; i++)
+	if(strcmp(gameDif, "Hard") == 0) // if gameDif is Hard
 	{
-		gameSolution[i] = possibleChoices[i];
+		// Intializes random number generator
+		srand((unsigned)time(&t));
+
+		// shuffles the possible Hard solutions array
+		// 8 is the size of possibleChoices array
+		shuffleArray(possibleHardChoices, 8);
+
+		// gets 4 random pegs (options can repeat)
+		for(i = 0; i < 4; i++)
+		{
+			// Pick a random index from 0 to 7
+			j = rand() % (7);
+
+			// adds the selected random choice and adds it to solution
+			gameSolution[i] = possibleHardChoices[j];
+		} // for
 	}
+	else if(strcmp(gameDif, "Medium") == 0) // if gameDif is Medium
+	{
+		// Intializes random number generator
+		srand((unsigned)time(&t));
+
+		// shuffles the possible solutions array
+		// 7 is the size of possibleChoices array
+		shuffleArray(possibleChoices, 7);
+
+		// gets 4 pegs from array (Options can repeat)
+		for(i = 0; i < 4; i++)
+		{
+			// Pick a random index from 0 to 6
+			j = rand() % (6);
+
+			// adds the selected random choice and adds it to solution
+			gameSolution[i] = possibleChoices[j];
+		} // for 
+	}
+	else // if gameDif is Easy
+	{
+		// shuffles the possible solutions array
+		// 7 is the size of possibleChoices array
+		shuffleArray(possibleChoices, 7);
+
+		// gets 4 pegs from array (Options can't repeat)
+		for(i = 0; i < 4; i++)
+		{
+			// adds first 4 values from shuffled array
+			// so values don't repeat
+			gameSolution[i] = possibleChoices[i];
+		}
+	} // if else
 
 } // generateGameSolution()
 
