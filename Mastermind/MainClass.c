@@ -132,6 +132,7 @@ int main(void)
 					{
 						saveScore(playerName, gameDif, currentTurn);
 						printf("\nGame Score Saved!\n");
+						menuChoice = 99;
 					} // if
 					break;
 				case 2: // exit
