@@ -46,9 +46,6 @@ int main(void)
 		playersGuess[i] = '.';
 	} // for
 
-	saveScore();
-	loadScores();
-
 	printf("Welcome To Mastermind!\n");
 
 	printf("\nThe aim of the game is to guess the colour and position of four pegs.");
@@ -109,6 +106,7 @@ int main(void)
 				switch(menuChoice)
 				{
 				case 1: // make a guess
+					saveScore(playerName, gameDif, currentTurn);
 					makeGuess(playersGuess, gameDif);
 
 					// if showSolution = 1, it shows the game solution and the game is over
@@ -128,6 +126,13 @@ int main(void)
 
 					// shows the number of turns used out of max goes
 					printf("\n%d Out Of %d Turns Used!",currentTurn, gameTurns);
+
+					// if the game is over because it was won or lost
+					if(showSolution == 1 || showSolution == 2)
+					{
+						saveScore(playerName, gameDif, currentTurn);
+						printf("\nGame Score Saved!\n");
+					} // if
 					break;
 				case 2: // exit
 					printf("\n\nAre You Sure You Want To Exit?");
@@ -160,7 +165,7 @@ int main(void)
 			} // while
 			break;
 		case 2: // options
-				options(gameTurnsPtr, playerName, gameDif);
+				options(gameTurnsPtr, playerName, gameDif, currentTurn);
 				break;
 		case 3:
 			printf("\nExiting!");

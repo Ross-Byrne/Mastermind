@@ -432,7 +432,7 @@ void generateGameSolution(char gameSolution[SINGLE_ROW], char possibleChoices[7]
 
 } // generateGameSolution()
 
-void options(int *gameTurnsPtr, char playerName[MAX_STRING], char gameDif[MAX_STRING])
+void options(int *gameTurnsPtr, char playerName[MAX_STRING], char gameDif[MAX_STRING], int currentTurn)
 {
 	int menuChoice = 0;
 
@@ -502,6 +502,7 @@ void options(int *gameTurnsPtr, char playerName[MAX_STRING], char gameDif[MAX_ST
 			*gameTurnsPtr = menuChoice;
 			break;
 		case 4: // view top scores
+			loadScores(playerName, gameDif, currentTurn);
 			break;
 		case 5: // exit
 			printf("\nExiting!");
@@ -511,36 +512,25 @@ void options(int *gameTurnsPtr, char playerName[MAX_STRING], char gameDif[MAX_ST
 	} // while
 } // options()
 
-void saveScore()
+void saveScore(char playerName[MAX_STRING], char gameDif[MAX_STRING], int currentTurn)
 {
 	FILE *fPtr;
 
 	// open file
-	fPtr = fopen(FILENAME, APPENDMODE);
+	fPtr = fopen(FILENAME, WRITEMODE);
 	if ( fPtr == NULL )
 	{
 		printf("\n\n\tCould Not open file\n");
 	} // if
 
 	// write to the file
-	//  do stuff
-	fprintf(fPtr, "\nHello file world!!");
-	fprintf(fPtr, "Hello Joe!");
-	fprintf(fPtr, "Lets Make Tea");
-
-	fprintf(fPtr, "\nHello file world!!");
-	fprintf(fPtr, "Hello Joe!");
-	fprintf(fPtr, "Lets Make Tea");
-
-	fprintf(fPtr, "\nHello file world!!");
-	fprintf(fPtr, "Hello Joe!");
-	fprintf(fPtr, "Lets Make Tea");
+	fprintf(fPtr, "%s %s %d\n", playerName, gameDif, currentTurn);
 
 	// close the file
 	fclose(fPtr);
 } // saveScore()
 
-void loadScores()
+void loadScores(char playerName[MAX_STRING], char gameDif[MAX_STRING], int currentTurn)
 {
 	FILE *fPtr;
 	int i=0;
@@ -552,11 +542,10 @@ void loadScores()
 		printf("\n\nCould Not open file %s", FILENAME);
 	} // if
 
-	do // read all lines in the file
-	{
-		fgets(strBuffer, MAX_COUNT, fPtr);
-		printf("\nLine %d: %s",++i, strBuffer);
-	} while( !feof(fPtr) ); // haven't reached end of file
+	// save values from text file to variables
+	fscanf(fPtr, "%s %s %d", playerName, gameDif, &currentTurn);
+
+	printf("\n%s\n%s\n%d\n", playerName, gameDif, currentTurn);
 
 	//then close the file
 	fclose(fPtr);

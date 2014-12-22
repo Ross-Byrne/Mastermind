@@ -43,7 +43,7 @@ void shuffleArray(char array[], int arraySize);
 void generateGameSolution(char gameSolution[SINGLE_ROW], char possibleChoices[7], char possibleHardChoices[8], 
 	char gameDif[MAX_STRING]);
 
-void options(int *gameTurnsPtr, char playerName[MAX_STRING], char gameDif[MAX_STRING]);
+void options(int *gameTurnsPtr, char playerName[MAX_STRING], char gameDif[MAX_STRING], int currentTurn);
 
-void saveScore();
-void loadScores();
+void saveScore(char playerName[MAX_STRING], char gameDif[MAX_STRING], int currentTurn);
+void loadScores(char playerName[MAX_STRING], char gameDif[MAX_STRING], int currentTurn);
