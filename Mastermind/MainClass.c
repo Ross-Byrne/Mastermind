@@ -17,18 +17,21 @@ int main(void)
 
 	int endGame = 0, menuChoice = 0, i, j;
 	int currentTurn = 0, showSolution = 0;
+	int wins = 0, losses = 0;
 
 	int gameTurns = TURNS;
 
 	// pointers
 	int *gameTurnsPtr;
 	int *showSolutionPtr;
-	char *gameDifPtr;
+	int *winsPtr;
+	int *lossesPtr;
 
 	// pointing pointers
 	gameTurnsPtr = &gameTurns;
 	showSolutionPtr = &showSolution;
-	gameDifPtr = gameDif;
+	winsPtr = &wins;
+	lossesPtr = &losses;
 
 	// instancating Variables
 	// game board and feedback board
@@ -115,8 +118,9 @@ int main(void)
 					// moves on to the next turn
 					currentTurn++;
 
-					if(currentTurn+1 > gameTurns)
+					if(currentTurn+1 > gameTurns && showSolution != 1)
 					{
+						// if last turn was used and guess wasn't right
 						showSolution = 2;
 					} // if
 
@@ -129,7 +133,16 @@ int main(void)
 					// if the game is over because it was won or lost
 					if(showSolution == 1 || showSolution == 2)
 					{
-						saveScore(playerName, gameDif, currentTurn);
+						if(showSolution == 1) // if won
+						{
+							++*winsPtr;
+						}
+						else // if lost
+						{
+							++*lossesPtr;
+						} // if
+
+						saveScore(playerName, gameDif, currentTurn, winsPtr, lossesPtr);
 						printf("\nGame Score Saved!\n");
 						menuChoice = 99;
 					} // if
