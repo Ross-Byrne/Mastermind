@@ -260,19 +260,29 @@ void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_R
 			// AND the colours are in the same place
 			// SO: if right colour is in right place.
 
-			// break after peg is gotten so exta pegs aren't added
-			// if a colour is guessed more then once
 			if((gameSolution[i] == playersGuess[j]) && (i == j)) 
 			{
+				// break after peg is gotten so extra pegs aren't added
+				// if a colour is guessed more then once
+
+				// delete guess after it's give a feedback peg
+				// to fix bug of giving a white peg to one
+				// of the correct colours when 2 of the same 
+				// colours are in the solution and correctly guessed
+
+				playersGuess[j] = ' ';
+
 				blackPegs++; // player gets black feedback peg
 				break;
-			} // if
-
-			// if the contents of gameSolution and playersGuess match (eg the right colour)
-			// BUT the colours are in different places
-			// SO: if right colour in wrong place
-			if(gameSolution[i] == playersGuess[j] && i != j) 
+			}
+			else if(gameSolution[i] == playersGuess[j] && i != j) 
 			{
+				// if the contents of gameSolution and playersGuess match (eg the right colour)
+				// BUT the colours are in different places
+				// SO: if right colour in wrong place
+				
+				playersGuess[j] = ' ';
+
 				whitePegs++; // player gets white feedback peg
 				break;
 			} // if
@@ -514,7 +524,125 @@ void options(int *gameTurnsPtr, char playerName[MAX_STRING], char gameDif[MAX_ST
 
 void saveScore(char playerName[MAX_STRING], char gameDif[MAX_STRING], int currentTurn)
 {
+	// top score
+	char name1[MAX_STRING] = "Player", difficulty1[MAX_STRING] = " - ";
+	int turnsTaken1 = 15;
+
+	// other scores
+	char name2[MAX_STRING] = "Player", difficulty2[MAX_STRING] = " - ";
+	int turnsTaken2 = 15;
+
+	char name3[MAX_STRING] = "Player", difficulty3[MAX_STRING] = " - ";
+	int turnsTaken3 = 15;
+
+	char name4[MAX_STRING] = "Player", difficulty4[MAX_STRING] = " - ";
+	int turnsTaken4 = 15;
+
+	char name5[MAX_STRING] = "Player", difficulty5[MAX_STRING] = " - ";
+	int turnsTaken5 = 15;
+
+	// other score data
+	int gamesPlayed, wins, loses; 
+
 	FILE *fPtr;
+
+	fPtr = fopen(FILENAME, READMODE);
+	if ( fPtr == NULL)
+	{
+		printf("\n\nCould Not open file %s", FILENAME);
+	} // if
+
+	//loads current high scores
+	fscanf(fPtr, "%s %s %d", name1, difficulty1, &turnsTaken1);
+	fscanf(fPtr, "%s %s %d", name2, difficulty2, &turnsTaken2);
+	fscanf(fPtr, "%s %s %d", name3, difficulty3, &turnsTaken3);
+	fscanf(fPtr, "%s %s %d", name4, difficulty4, &turnsTaken4);
+	fscanf(fPtr, "%s %s %d", name5, difficulty5, &turnsTaken5);
+
+	// closes the file
+	fclose(fPtr);
+
+	// manages the top 5 high scores
+	if (currentTurn < turnsTaken1)
+    {
+		strcpy(name5, name4);
+		strcpy(name4, name3);
+		strcpy(name3, name2);
+		strcpy(name2, name1);
+        strcpy(name1, playerName);
+
+		strcpy(difficulty5, difficulty4);
+		strcpy(difficulty4, difficulty3);
+		strcpy(difficulty3, difficulty2);
+		strcpy(difficulty2, difficulty1);
+        strcpy(difficulty1, gameDif);
+
+        turnsTaken5 = turnsTaken4;
+        turnsTaken4 = turnsTaken3;
+        turnsTaken3 = turnsTaken2;
+        turnsTaken2 = turnsTaken1;
+        turnsTaken1 = currentTurn;
+    }
+	else
+	{
+		if (currentTurn < turnsTaken2)
+		{
+			strcpy(name5, name4);
+			strcpy(name4, name3);
+			strcpy(name3, name2);
+			strcpy(name2, playerName);
+
+			strcpy(difficulty5, difficulty4);
+			strcpy(difficulty4, difficulty3);
+			strcpy(difficulty3, difficulty2);
+			strcpy(difficulty2, gameDif);
+
+			turnsTaken5 = turnsTaken4;
+			turnsTaken4 = turnsTaken3;
+			turnsTaken3 = turnsTaken2;
+			turnsTaken2 = currentTurn;
+		}
+		else 
+		{
+			if (currentTurn < turnsTaken3)
+			{
+				strcpy(name5, name4);
+				strcpy(name4, name3);
+				strcpy(name3, playerName);
+
+				strcpy(difficulty5, difficulty4);
+				strcpy(difficulty4, difficulty3);
+				strcpy(difficulty3, gameDif);
+
+				turnsTaken5 = turnsTaken4;
+				turnsTaken4 = turnsTaken3;
+				turnsTaken3 = currentTurn;
+			}
+			else 
+			{	
+				if (currentTurn < turnsTaken4)
+				{
+					strcpy(name5, name4);
+					strcpy(name4, playerName);
+
+					strcpy(difficulty5, difficulty4);
+					strcpy(difficulty4, gameDif);
+
+					turnsTaken5 = turnsTaken4;
+					turnsTaken4 = currentTurn;
+				}
+				else 
+				{	
+					if (currentTurn < turnsTaken5)
+					{
+						turnsTaken5 = currentTurn;
+						strcpy(difficulty5, gameDif);
+						strcpy(name5, playerName);
+					} // if 
+				} // if
+			} // if
+		} // if
+	} // if
 
 	// open file
 	fPtr = fopen(FILENAME, WRITEMODE);
@@ -523,8 +651,12 @@ void saveScore(char playerName[MAX_STRING], char gameDif[MAX_STRING], int curren
 		printf("\n\n\tCould Not open file\n");
 	} // if
 
-	// write to the file
-	fprintf(fPtr, "%s %s %d\n", playerName, gameDif, currentTurn);
+	// Saves scores to file
+	fprintf(fPtr, "%s %s %d\n", name1, difficulty1, turnsTaken1);
+	fprintf(fPtr, "%s %s %d\n", name2, difficulty2, turnsTaken2);
+	fprintf(fPtr, "%s %s %d\n", name3, difficulty3, turnsTaken3);
+	fprintf(fPtr, "%s %s %d\n", name4, difficulty4, turnsTaken4);
+	fprintf(fPtr, "%s %s %d\n", name5, difficulty5, turnsTaken5);
 
 	// close the file
 	fclose(fPtr);
@@ -532,6 +664,26 @@ void saveScore(char playerName[MAX_STRING], char gameDif[MAX_STRING], int curren
 
 void loadScores(char playerName[MAX_STRING], char gameDif[MAX_STRING], int currentTurn)
 {
+	// top score
+	char name1[MAX_STRING] = "Player", difficulty1[MAX_STRING] = " - ";
+	int turnsTaken1 = 15;
+
+	// other scores
+	char name2[MAX_STRING] = "Player", difficulty2[MAX_STRING] = " - ";
+	int turnsTaken2 = 15;
+
+	char name3[MAX_STRING] = "Player", difficulty3[MAX_STRING] = " - ";
+	int turnsTaken3 = 15;
+
+	char name4[MAX_STRING] = "Player", difficulty4[MAX_STRING] = " - ";
+	int turnsTaken4 = 15;
+
+	char name5[MAX_STRING] = "Player", difficulty5[MAX_STRING] = " - ";
+	int turnsTaken5 = 15;
+
+	// other score data
+	int gamesPlayed, wins, loses; 
+
 	FILE *fPtr;
 	int i=0;
 	char strBuffer[MAX_COUNT + 1];	// +1 accounts for \0 null character
@@ -543,11 +695,33 @@ void loadScores(char playerName[MAX_STRING], char gameDif[MAX_STRING], int curre
 	} // if
 
 	// save values from text file to variables
-	fscanf(fPtr, "%s %s %d", playerName, gameDif, &currentTurn);
+	fscanf(fPtr, "%s %s %d", name1, difficulty1, &turnsTaken1);
+	fscanf(fPtr, "%s %s %d", name2, difficulty2, &turnsTaken2);
+	fscanf(fPtr, "%s %s %d", name3, difficulty3, &turnsTaken3);
+	fscanf(fPtr, "%s %s %d", name4, difficulty4, &turnsTaken4);
+	fscanf(fPtr, "%s %s %d", name5, difficulty5, &turnsTaken5);
+	
 
-	printf("\n%s\n%s\n%d\n", playerName, gameDif, currentTurn);
+	//printf("\nName:  Game Difficulty:  Turns Taken:");
+
+	printf("\n1: Name: %s.  Game Difficulty: %s.  Turns Taken: %d.\n", name1, difficulty1, turnsTaken1);
+	printf("\n2: Name: %s.  Game Difficulty: %s.  Turns Taken: %d.\n", name2, difficulty2, turnsTaken2);
+	printf("\n3: Name: %s.  Game Difficulty: %s.  Turns Taken: %d.\n", name3, difficulty3, turnsTaken3);
+	printf("\n4: Name: %s.  Game Difficulty: %s.  Turns Taken: %d.\n", name4, difficulty4, turnsTaken4);
+	printf("\n5: Name: %s.  Game Difficulty: %s.  Turns Taken: %d.\n", name5, difficulty5, turnsTaken5);
+
+	/*do // read all lines in the file
+	{
+		fgets(strBuffer, MAX_COUNT, fPtr);
+		printf("\n%d: %s", ++i, strBuffer);
+	} while( !feof(fPtr) ); // haven't reached end of file*/
 
 	//then close the file
 	fclose(fPtr);
 
 } // loadScores()
+
+void manageScores()
+{
+
+} // manageScores()

@@ -106,13 +106,12 @@ int main(void)
 				switch(menuChoice)
 				{
 				case 1: // make a guess
-					saveScore(playerName, gameDif, currentTurn);
 					makeGuess(playersGuess, gameDif);
 
+					addPlayersGuessToBoard(playersGuess,gameBoard, currentTurn);
 					// if showSolution = 1, it shows the game solution and the game is over
 					checkPlayersGuess(playersGuess, gameSolution, feedbackBoard, currentGuessFeedback, currentTurn, showSolutionPtr);
-					addPlayersGuessToBoard(playersGuess,gameBoard, currentTurn);
-
+					
 					// moves on to the next turn
 					currentTurn++;
 

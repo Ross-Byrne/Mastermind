@@ -47,3 +47,5 @@ void options(int *gameTurnsPtr, char playerName[MAX_STRING], char gameDif[MAX_ST
 
 void saveScore(char playerName[MAX_STRING], char gameDif[MAX_STRING], int currentTurn);
 void loadScores(char playerName[MAX_STRING], char gameDif[MAX_STRING], int currentTurn);
+
+void manageScores();
