@@ -59,6 +59,8 @@ int main(void)
 	printf("\nA Black peg indicates a correct coloured peg in the right place.");
 	printf("\nIf there are no feedback pegs, then there are no correct colours picked.\n");
 
+	printf("\nFor a greater gameplay experience, make the window fullscreen!\n");
+
 	// Game Loop
 	while(endGame != 99)
 	{
@@ -76,7 +78,7 @@ int main(void)
 
 		switch(menuChoice)
 		{
-		case 1:
+		case 1: // play the game
 			menuChoice = 0;
 			currentTurn = 0;
 
@@ -90,7 +92,6 @@ int main(void)
 			} // for
 
 			generateGameSolution(gameSolution, possibleChoices, possibleHardChoices, gameDif);
-			printGameSolution(gameSolution);
 
 			while(menuChoice != 99)
 			{
@@ -180,7 +181,7 @@ int main(void)
 		case 2: // options
 				options(gameTurnsPtr, playerName, gameDif, currentTurn);
 				break;
-		case 3:
+		case 3: // exit
 			printf("\nExiting!");
 			endGame = 99;
 			break;

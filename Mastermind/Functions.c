@@ -339,9 +339,6 @@ void checkPlayersGuess(char playersGuess[SINGLE_ROW], char gameSolution[SINGLE_R
 			feedbackBoard[currentTurn][i] = currentGuessFeedback[i];
 		} // for
 
-		printf("\n\nWhite Pegs: %d", whitePegs);
-		printf("\nBlack Pegs: %d", blackPegs);
-
 		*showSolutionPtr = 0;
 	} // if
 
@@ -549,19 +546,22 @@ void saveScore(char playerName[MAX_STRING], char gameDif[MAX_STRING], int curren
 	fPtr = fopen(FILENAME, READMODE);
 	if ( fPtr == NULL)
 	{
-		printf("\n\nCould Not open file %s", FILENAME);
+		// if file is not working
+		// uses default values
+	}
+	else
+	{
+		//loads current high scores
+		fscanf(fPtr, "%d %d", &wins, &losses);
+		fscanf(fPtr, "%s %s %d", name1, difficulty1, &turnsTaken1);
+		fscanf(fPtr, "%s %s %d", name2, difficulty2, &turnsTaken2);
+		fscanf(fPtr, "%s %s %d", name3, difficulty3, &turnsTaken3);
+		fscanf(fPtr, "%s %s %d", name4, difficulty4, &turnsTaken4);
+		fscanf(fPtr, "%s %s %d", name5, difficulty5, &turnsTaken5);
+
+		// closes the file
+		fclose(fPtr);
 	} // if
-
-	//loads current high scores
-	fscanf(fPtr, "%d %d", &wins, &losses);
-	fscanf(fPtr, "%s %s %d", name1, difficulty1, &turnsTaken1);
-	fscanf(fPtr, "%s %s %d", name2, difficulty2, &turnsTaken2);
-	fscanf(fPtr, "%s %s %d", name3, difficulty3, &turnsTaken3);
-	fscanf(fPtr, "%s %s %d", name4, difficulty4, &turnsTaken4);
-	fscanf(fPtr, "%s %s %d", name5, difficulty5, &turnsTaken5);
-
-	// closes the file
-	fclose(fPtr);
 
 	// adds games played to the record
 	wins += *winsPtr;
@@ -658,19 +658,21 @@ void saveScore(char playerName[MAX_STRING], char gameDif[MAX_STRING], int curren
 	if ( fPtr == NULL )
 	{
 		printf("\n\n\tCould Not open file\n");
+	}
+	else
+	{
+		// Saves scores to file
+		fprintf(fPtr, "%d %d\n", wins, losses);
+		fprintf(fPtr, "%s %s %d\n", name1, difficulty1, turnsTaken1);
+		fprintf(fPtr, "%s %s %d\n", name2, difficulty2, turnsTaken2);
+		fprintf(fPtr, "%s %s %d\n", name3, difficulty3, turnsTaken3);
+		fprintf(fPtr, "%s %s %d\n", name4, difficulty4, turnsTaken4);
+		fprintf(fPtr, "%s %s %d\n", name5, difficulty5, turnsTaken5);
+
+		// close the file
+		fclose(fPtr);
 	} // if
-
-	// Saves scores to file
-	fprintf(fPtr, "%d %d\n", wins, losses);
-	fprintf(fPtr, "%s %s %d\n", name1, difficulty1, turnsTaken1);
-	fprintf(fPtr, "%s %s %d\n", name2, difficulty2, turnsTaken2);
-	fprintf(fPtr, "%s %s %d\n", name3, difficulty3, turnsTaken3);
-	fprintf(fPtr, "%s %s %d\n", name4, difficulty4, turnsTaken4);
-	fprintf(fPtr, "%s %s %d\n", name5, difficulty5, turnsTaken5);
-
-	// close the file
-	fclose(fPtr);
-
+	
 	printf("\nWins: %d Losses: %d", wins, losses);
 } // saveScore()
 
@@ -704,32 +706,34 @@ void loadScores()
 	fPtr = fopen(FILENAME, READMODE);
 	if ( fPtr == NULL)
 	{
-		printf("\n\nCould Not open file %s", FILENAME);
+		printf("\n\nCould Not open file %s. New File Created.", FILENAME);
+	}
+	else
+	{
+		// save values from text file to variables
+		fscanf(fPtr, "%d %d", &wins, &losses);
+		fscanf(fPtr, "%s %s %d", name1, difficulty1, &turnsTaken1);
+		fscanf(fPtr, "%s %s %d", name2, difficulty2, &turnsTaken2);
+		fscanf(fPtr, "%s %s %d", name3, difficulty3, &turnsTaken3);
+		fscanf(fPtr, "%s %s %d", name4, difficulty4, &turnsTaken4);
+		fscanf(fPtr, "%s %s %d", name5, difficulty5, &turnsTaken5);
+	
+		// total games played
+		gamesPlayed = wins + losses;
+	
+		// calculates wins/losses Percentage
+		winsPercent = (100 * wins / gamesPlayed);
+		lossesPercent = (100 * losses / gamesPlayed);
+
+		//then close the file
+		fclose(fPtr);
 	} // if
 
-	// save values from text file to variables
-	fscanf(fPtr, "%d %d", &wins, &losses);
-	fscanf(fPtr, "%s %s %d", name1, difficulty1, &turnsTaken1);
-	fscanf(fPtr, "%s %s %d", name2, difficulty2, &turnsTaken2);
-	fscanf(fPtr, "%s %s %d", name3, difficulty3, &turnsTaken3);
-	fscanf(fPtr, "%s %s %d", name4, difficulty4, &turnsTaken4);
-	fscanf(fPtr, "%s %s %d", name5, difficulty5, &turnsTaken5);
-	
-	// total games played
-	gamesPlayed = wins + losses;
-	
-	// calculates wins/losses Percentage
-	winsPercent = (100 * wins / gamesPlayed);
-	lossesPercent = (100 * losses / gamesPlayed);
-
-	printf("\nTotal Games Played: %d. Wins/Loses Percentage: %.0f%% / %.0f%%.\n", gamesPlayed, winsPercent, lossesPercent);
+	printf("\nTotal Games Played: %d. Wins/Losses Percentage: %.0f%% / %.0f%%.\n", gamesPlayed, winsPercent, lossesPercent);
 	printf("\n1: Name: %s.  Game Difficulty: %s.  Turns Taken: %d.\n", name1, difficulty1, turnsTaken1);
 	printf("\n2: Name: %s.  Game Difficulty: %s.  Turns Taken: %d.\n", name2, difficulty2, turnsTaken2);
 	printf("\n3: Name: %s.  Game Difficulty: %s.  Turns Taken: %d.\n", name3, difficulty3, turnsTaken3);
 	printf("\n4: Name: %s.  Game Difficulty: %s.  Turns Taken: %d.\n", name4, difficulty4, turnsTaken4);
 	printf("\n5: Name: %s.  Game Difficulty: %s.  Turns Taken: %d.\n", name5, difficulty5, turnsTaken5);
-
-	//then close the file
-	fclose(fPtr);
-
+	
 } // loadScores()
