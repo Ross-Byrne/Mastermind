@@ -672,8 +672,8 @@ void saveScore(char playerName[MAX_STRING], char gameDif[MAX_STRING], int curren
 		// close the file
 		fclose(fPtr);
 	} // if
-	
-	printf("\nWins: %d Losses: %d", wins, losses);
+
+	printf("\n\nGame Score Saved!\n");
 } // saveScore()
 
 void loadScores()

@@ -144,7 +144,8 @@ int main(void)
 						} // if
 
 						saveScore(playerName, gameDif, currentTurn, winsPtr, lossesPtr);
-						printf("\nGame Score Saved!\n");
+
+						// exits back to the main menu
 						menuChoice = 99;
 					} // if
 					break;
